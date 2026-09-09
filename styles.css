@@ -999,6 +999,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 /* ==========================================================================
    MODAL
    ========================================================================== */
+.modal-overlay[hidden] { display: none; }
+
 .modal-overlay {
   position: fixed;
   inset: 0;
