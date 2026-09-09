@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alpha Sig Social Hub — Fall 2026</title>
+<meta name="description" content="Alpha Sigma Phi Fall 2026 Social Hub — view the semester calendar, vote on event ideas, and submit new social suggestions." />
+
+<!-- Google Fonts: Oswald (display/headings) + Work Sans (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SKIP LINK (accessibility)
+============================================================ -->
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================================================
+     STICKY NAVIGATION
+============================================================ -->
+<header class="site-header" id="top">
+  <div class="navbar">
+    <a class="brand" href="#top">
+      <span class="brand-mark" data-fallback="ΑΣΦ">
+        <img src="assets/letters.jpeg" alt="Alpha Sigma Phi letters" onerror="this.style.display='none'" />
+      </span>
+      <span class="brand-text">
+        <span class="brand-greek">ΑΣΦ</span>
+        <span class="brand-sub">Social Hub</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#top" class="nav-link">Home</a></li>
+        <li><a href="#calendar" class="nav-link">Calendar</a></li>
+        <li><a href="#ideas" class="nav-link">Event Ideas</a></li>
+        <li><a href="#top-picks" class="nav-link">Top Picks</a></li>
+        <li><a href="#submit" class="nav-link nav-link-cta">Submit Idea</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="hero" id="home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <span class="hero-crest" data-fallback="ΑΣΦ">
+        <img src="assets/crest.jpeg" alt="Alpha Sigma Phi crest" onerror="this.style.display='none'" />
+      </span>
+
+      <p class="hero-greek">ΑΣΦ</p>
+      <h1 class="hero-title">Alpha Sigma Phi</h1>
+      <p class="hero-kicker">Fall 2026 Social Hub</p>
+      <p class="hero-subtitle">Plan it. Vote on it. Make it happen.</p>
+      <p class="hero-description">
+        A central place for our chapter to view potential socials, tailgates, themed events,
+        brotherhood events, date events, and semester ideas.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#calendar" class="btn btn-primary">View Calendar</a>
+        <a href="#ideas" class="btn btn-secondary">Explore Ideas</a>
+        <a href="#submit" class="btn btn-outline">Submit an Idea</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SEMESTER CALENDAR
+  ============================================================ -->
+  <section class="calendar-section" id="calendar">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2 class="section-title">Semester Calendar</h2>
+        <p class="section-lead">Fall 2026 — browse potential socials month by month.</p>
+      </div>
+
+      <div class="month-tabs" id="monthTabs" role="tablist" aria-label="Select month"></div>
+
+      <div class="calendar-wrap">
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="Calendar of potential events"></div>
+      </div>
+
+      <div class="calendar-legend" id="calendarLegend" aria-label="Event category legend"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FILTERS + EVENT IDEAS
+  ============================================================ -->
+  <section class="ideas-section" id="ideas">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2 class="section-title">Event Ideas</h2>
+        <p class="section-lead">Filter by type and vote for what you want to see happen this semester.</p>
+      </div>
+
+      <div class="filter-row" id="filterRow" role="tablist" aria-label="Filter events by category"></div>
+      <div class="cards-grid" id="cardsGrid"></div>
+      <p class="empty-state" id="emptyState" hidden>No events in this category yet — be the first to <a href="#submit">submit an idea</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TOP CHAPTER PICKS
+  ============================================================ -->
+  <section class="top-picks-section" id="top-picks">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2 class="section-title">Top Chapter Picks</h2>
+        <p class="section-lead">Ranked by chapter-wide sample votes.</p>
+      </div>
+
+      <ol class="picks-list" id="picksList"></ol>
+
+      <p class="picks-note">
+        The vote counts above are illustrative starting numbers, set for launch and stored in the code —
+        not a live shared total. Your own vote lives only in this browser (see below) and is always shown
+        separately from these chapter numbers.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SUBMIT AN IDEA
+  ============================================================ -->
+  <section class="submit-section" id="submit">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2 class="section-title">Submit a Social Idea</h2>
+        <p class="section-lead">Have an idea for the semester? Add the details below.</p>
+      </div>
+
+      <form class="idea-form" id="ideaForm" novalidate>
+        <div class="form-grid">
+
+          <label class="form-field">
+            <span>Event Name</span>
+            <input type="text" name="eventName" id="eventName" required placeholder="e.g. Rooftop Sunset Social" />
+          </label>
+
+          <label class="form-field">
+            <span>Event Type</span>
+            <select name="eventType" id="eventType" required>
+              <option value="" disabled selected>Select a type</option>
+              <option value="tailgate">Tailgate</option>
+              <option value="social">Sorority Social</option>
+              <option value="party">Party</option>
+              <option value="brotherhood">Brotherhood</option>
+              <option value="date">Date Event</option>
+              <option value="formal">Formal</option>
+              <option value="philanthropy">Philanthropy</option>
+              <option value="sports">Sports</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Suggested Date</span>
+            <input type="date" name="suggestedDate" id="suggestedDate" />
+          </label>
+
+          <label class="form-field">
+            <span>Potential Partner</span>
+            <input type="text" name="partner" id="partner" placeholder="e.g. Chi Omega, or TBD" />
+          </label>
+
+          <label class="form-field">
+            <span>Theme</span>
+            <input type="text" name="theme" id="theme" placeholder="e.g. Beach, 80s, Formal Black-Tie" />
+          </label>
+
+          <label class="form-field">
+            <span>Estimated Attendance</span>
+            <input type="text" name="attendance" id="attendance" placeholder="e.g. 50-100" />
+          </label>
+
+          <label class="form-field">
+            <span>Estimated Budget</span>
+            <select name="budget" id="budget">
+              <option value="">Not sure yet</option>
+              <option value="$">$ — Under $100</option>
+              <option value="$$">$$ — $100–$300</option>
+              <option value="$$$">$$$ — $300–$600</option>
+              <option value="$$$$">$$$$ — $600+</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Location Type</span>
+            <select name="locationType" id="locationType">
+              <option value="">Not sure yet</option>
+              <option value="chapter-house">Chapter House</option>
+              <option value="off-campus-venue">Off-Campus Venue</option>
+              <option value="outdoor">Outdoor / Park</option>
+              <option value="campus">On Campus</option>
+              <option value="tbd">TBD</option>
+            </select>
+          </label>
+
+          <label class="form-field form-field-wide">
+            <span>Description</span>
+            <textarea name="description" id="description" rows="3" placeholder="Give a short overview of the idea..."></textarea>
+          </label>
+
+          <label class="form-field form-field-wide">
+            <span>Additional Ideas</span>
+            <textarea name="additionalIdeas" id="additionalIdeas" rows="3" placeholder="Decorations, games, music, logistics — anything else worth noting"></textarea>
+          </label>
+
+        </div>
+
+        <!--
+          FUTURE INTEGRATION NOTE:
+          To connect this form to Google Forms, replace the handleFormSubmit() logic
+          in script.js with a fetch() POST to your published Google Form's
+          "formResponse" URL, mapping each field name below to the Form's entry.XXXXXXX
+          IDs. To use Google Sheets directly, deploy a Google Apps Script as a Web App
+          and POST the same JSON body to that Web App URL instead. See the matching
+          comment block above handleFormSubmit() in script.js for a ready-to-uncomment
+          example.
+        -->
+
+        <button type="submit" class="btn btn-primary btn-submit">Submit Social Idea</button>
+      </form>
+
+      <div class="form-success" id="formSuccess" hidden>
+        ✅ Thanks — your idea has been saved on this device. Bring it up at the next chapter meeting,
+        or a brother running the site can review submissions in the browser's local storage.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRIVACY NOTE
+  ============================================================ -->
+  <p class="privacy-note">
+    Public planning page — exact addresses, private chapter details, guest lists, and sensitive
+    event information should remain in chapter communication channels.
+  </p>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="site-footer">
+  <span class="footer-seal" data-fallback="ΑΣΦ">
+    <img src="assets/seal.jpeg" alt="Alpha Sigma Phi seal" onerror="this.style.display='none'" />
+  </span>
+  <p class="footer-greek">ΑΣΦ</p>
+  <p class="footer-name">Alpha Sigma Phi</p>
+  <p class="footer-sub">Fall 2026 Social Hub</p>
+  <p class="footer-motto">Causa Latet Vis Est Notissima</p>
+  <p class="footer-fine">Made for chapter social planning.</p>
+</footer>
+
+<!-- ============================================================
+     EVENT DETAIL MODAL
+============================================================ -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="modalBox">
+    <button class="modal-close" id="modalClose" aria-label="Close event details">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
