@@ -318,6 +318,44 @@ const EVENTS = [
       "Bids / next steps discussed after"
     ],
     sampleVotes: { mustDo: 5, interested: 4 }
+  },
+
+  /* ---- Joint events with Phi Kappa Theta (ASig x Phi Kap) ---- */
+  {
+    id: 17,
+    name: "Joint Tailgate — ASig x Phi Kap",
+    date: "2026-09-26",
+    category: "tailgate",
+    status: "planned",
+    partner: "Phi Kappa Theta",
+    attendance: "100-180",
+    budget: "$$",
+    description: "Joint tailgate with Phi Kappa Theta — targeting roughly two weeks out, date to be matched to a CSU home game. Combine both chapters for a bigger cookout and turnout.",
+    ideas: [
+      "Target ~2 weeks out — align to a CSU home game",
+      "Split grill / supplies with Phi Kap",
+      "Shared yard games and music",
+      "Lock the date with Phi Kap's social chair"
+    ],
+    sampleVotes: { mustDo: 26, interested: 24 }
+  },
+  {
+    id: 18,
+    name: "Joint Party — ASig x Phi Kap",
+    date: "2026-10-24",
+    category: "party",
+    status: "idea",
+    partner: "Phi Kappa Theta",
+    attendance: "120-200",
+    budget: "$$$",
+    description: "A joint party with Phi Kappa Theta later in the semester — bigger venue, shared cost, theme still open.",
+    ideas: [
+      "Later in the semester (date flexible)",
+      "Bigger off-campus venue",
+      "Split cost and guest list with Phi Kap",
+      "Theme TBD — could tie into a calendar theme vote"
+    ],
+    sampleVotes: { mustDo: 19, interested: 21 }
   }
 ];
 
@@ -389,7 +427,8 @@ const SEMESTER_MONTHS = [
    -------------------------------------------------------------------- */
 const STORAGE_KEYS = {
   VOTES: "asf_votes",
-  SUBMISSIONS: "asf_submissions"
+  SUBMISSIONS: "asf_submissions",
+  THEME_VOTES: "asf_theme_votes"
 };
 
 function loadVotes() {
@@ -428,6 +467,126 @@ function setUserVote(eventId, type) {
   renderCards();
   renderTopPicks();
   refreshOpenModal(eventId);
+}
+
+/* --------------------------------------------------------------------
+   THEME POLLS (calendar day theme voting)
+   --------------------------------------------------------------------
+   Some calendar days are NOT a set event yet — they're an open slot
+   with a few theme ideas the chapter votes between. Each poll below
+   shows up on its date as a "Vote on the theme" button instead of a
+   solid event pill, so nothing looks locked in before people weigh in.
+
+   Fields per poll:
+     id           unique string
+     date         "YYYY-MM-DD" (same Sept–Dec 2026 calendar window)
+     label        short title shown at the top of the vote box
+     note         optional one-liner under the title
+     options      array of { id, label, blurb }
+     sampleVotes  { <optionId>: <number> } starting/placeholder counts,
+                  same idea as sampleVotes on EVENTS — not a live total.
+   Like event votes, a member's pick is stored only in their own
+   browser (STORAGE_KEYS.THEME_VOTES) and shown separately from these
+   placeholder numbers.
+   -------------------------------------------------------------------- */
+const THEME_POLLS = [
+  {
+    id: "theme-2026-09-19",
+    date: "2026-09-19",
+    label: "Sept 19 Social — pick the theme",
+    note: "Open slot with a sorority TBD. Vote for what sounds most fun.",
+    options: [
+      { id: "western",     label: "Western Night",     blurb: "Boots, hats, country music" },
+      { id: "highlighter", label: "Highlighter Party", blurb: "White tees + markers, blacklights" },
+      { id: "jersey",      label: "Jersey Night",      blurb: "Rep your favorite team" },
+      { id: "toga",        label: "Toga Night",        blurb: "Classic sheets-and-laurels" }
+    ],
+    sampleVotes: { western: 14, highlighter: 11, jersey: 8, toga: 5 }
+  },
+  {
+    id: "theme-2026-10-17",
+    date: "2026-10-17",
+    label: "Oct 17 Social — pick the theme",
+    note: "Nothing locked in yet — vote on the vibe.",
+    options: [
+      { id: "blackout",     label: "Blackout / Neon",     blurb: "All black + blacklights & glow sticks" },
+      { id: "adam-sandler", label: "Adam Sandler Night",  blurb: "Cargo shorts, baggy jerseys, hoops" },
+      { id: "camo",         label: "Camo & Cowboys",      blurb: "Camo meets western" },
+      { id: "decades",      label: "Decades (80s/90s)",   blurb: "Pick a decade and commit" }
+    ],
+    sampleVotes: { blackout: 16, "adam-sandler": 13, camo: 9, decades: 7 }
+  },
+  {
+    id: "theme-2026-12-05",
+    date: "2026-12-05",
+    label: "Dec 5 Holiday Social — pick the theme",
+    note: "End-of-semester social. Vote for the theme.",
+    options: [
+      { id: "ugly-sweater", label: "Ugly Sweater",       blurb: "Tackiest sweater wins a prize" },
+      { id: "santa",        label: "Santa's Workshop",   blurb: "Red & green, Santa hats" },
+      { id: "winter",       label: "Winter Wonderland",  blurb: "Dress up, white & silver" }
+    ],
+    sampleVotes: { "ugly-sweater": 18, santa: 10, winter: 12 }
+  }
+];
+
+function getThemePoll(pollId) {
+  return THEME_POLLS.find((p) => p.id === pollId) || null;
+}
+
+function themePollForDate(isoDate) {
+  return THEME_POLLS.find((p) => p.date === isoDate) || null;
+}
+
+function loadThemeVotes() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.THEME_VOTES);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.warn("Could not read theme votes from localStorage:", err);
+    return {};
+  }
+}
+
+function saveThemeVotes(votes) {
+  try {
+    localStorage.setItem(STORAGE_KEYS.THEME_VOTES, JSON.stringify(votes));
+  } catch (err) {
+    console.warn("Could not save theme vote to localStorage:", err);
+  }
+}
+
+function getThemeVote(pollId) {
+  return loadThemeVotes()[pollId] || null;
+}
+
+/* Clicking your current pick again clears it (un-vote). */
+function setThemeVote(pollId, optionId) {
+  const votes = loadThemeVotes();
+  if (votes[pollId] === optionId) {
+    delete votes[pollId];
+  } else {
+    votes[pollId] = optionId;
+  }
+  saveThemeVotes(votes);
+  renderCalendar(currentMonthIndex);
+  refreshOpenThemePoll(pollId);
+}
+
+/* Total shown per option = placeholder sampleVotes + your own pick. */
+function themeOptionCount(poll, optionId) {
+  const base = poll.sampleVotes[optionId] || 0;
+  return base + (getThemeVote(poll.id) === optionId ? 1 : 0);
+}
+
+function themeLeaderId(poll) {
+  let leader = null;
+  let best = -1;
+  poll.options.forEach((opt) => {
+    const c = themeOptionCount(poll, opt.id);
+    if (c > best) { best = c; leader = opt.id; }
+  });
+  return leader;
 }
 
 function loadSubmissions() {
@@ -559,7 +718,13 @@ function renderCalendar(monthIndex) {
   dom.calendarGrid.innerHTML = cells.map((day) => {
     if (day === null) return `<div class="cal-cell is-blank"></div>`;
 
-    const dayEvents = eventsOnDate(year, month, day);
+    const iso = toISODate(year, month, day);
+
+    // Only confirmed/planned events render as a solid pill — an "idea" or
+    // "voting" event isn't shown on the calendar as if it were locked in.
+    const dayEvents = eventsOnDate(year, month, day)
+      .filter((ev) => ev.status === "confirmed" || ev.status === "planned");
+
     const pills = dayEvents.map((ev) => `
       <button class="cal-pill" data-id="${ev.id}"
               style="background-color:${CATEGORIES[ev.category].color}"
@@ -569,9 +734,25 @@ function renderCalendar(monthIndex) {
       </button>
     `).join("");
 
+    // Open slot with theme ideas to vote between.
+    const poll = themePollForDate(iso);
+    let voteBtn = "";
+    if (poll) {
+      const myPick = getThemeVote(poll.id);
+      const picked = poll.options.find((o) => o.id === myPick);
+      voteBtn = `
+        <button class="cal-themevote ${picked ? "has-pick" : ""}" data-poll="${poll.id}"
+                title="Vote on the theme for this day">
+          🗳 <span class="cal-themevote-label">${picked ? "Theme: " + escapeHtml(picked.label) : "Vote on theme"}</span>
+        </button>
+      `;
+    }
+
+    const hasContent = dayEvents.length || poll;
     return `
-      <div class="cal-cell ${dayEvents.length ? "has-events" : ""}">
+      <div class="cal-cell ${hasContent ? "has-events" : ""}">
         <span class="cal-daynum">${day}</span>
+        ${voteBtn}
         ${pills}
       </div>
     `;
@@ -597,6 +778,11 @@ function initCalendarEvents() {
   });
 
   dom.calendarGrid.addEventListener("click", (e) => {
+    const voteBtn = e.target.closest(".cal-themevote");
+    if (voteBtn) {
+      openThemePoll(voteBtn.dataset.poll);
+      return;
+    }
     const pill = e.target.closest(".cal-pill");
     if (!pill) return;
     openModal(pill.dataset.id);
@@ -778,6 +964,65 @@ function refreshOpenModal(eventId) {
   }
 }
 
+/* --------------------------------------------------------------------
+   THEME POLL MODAL
+   -------------------------------------------------------------------- */
+function openThemePoll(pollId) {
+  const poll = getThemePoll(pollId);
+  if (!poll) return;
+
+  const myPick = getThemeVote(poll.id);
+  const leaderId = themeLeaderId(poll);
+
+  const optionsHtml = poll.options.map((opt) => {
+    const count = themeOptionCount(poll, opt.id);
+    const isMine = myPick === opt.id;
+    const isLeader = leaderId === opt.id;
+    return `
+      <button class="theme-opt ${isMine ? "is-picked" : ""}" data-poll="${poll.id}" data-option="${opt.id}">
+        <span class="theme-opt-main">
+          <span class="theme-opt-label">${escapeHtml(opt.label)}${isLeader ? ` <span class="theme-opt-lead">Leading</span>` : ""}</span>
+          <span class="theme-opt-blurb">${escapeHtml(opt.blurb)}</span>
+        </span>
+        <span class="theme-opt-count">${count}<small>votes</small></span>
+      </button>
+    `;
+  }).join("");
+
+  dom.modalContent.innerHTML = `
+    <h3 class="modal-title" id="modalTitle">${escapeHtml(poll.label)}</h3>
+
+    <div class="modal-badges">
+      <span class="card-category" style="background-color:var(--cat-rush)">🗳 Theme Vote</span>
+      <span class="status-badge status-voting">${formatDateLong(poll.date)}</span>
+    </div>
+
+    ${poll.note ? `<p class="modal-desc">${escapeHtml(poll.note)}</p>` : ""}
+
+    <div class="theme-opts" data-poll-id="${poll.id}">
+      ${optionsHtml}
+    </div>
+
+    <p class="picks-note" style="margin-top:14px;">
+      Tap an option to cast your vote (tap again to undo). Vote counts are
+      illustrative starting numbers plus your own pick — stored only in this
+      browser, not a live chapter total.
+    </p>
+  `;
+
+  dom.modalOverlay.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+/* If the theme poll modal is open for the poll just voted on, re-render it. */
+function refreshOpenThemePoll(pollId) {
+  if (dom.modalOverlay.hidden) return;
+  const box = dom.modalContent.querySelector(".theme-opts");
+  if (box && box.dataset.pollId === pollId) {
+    openThemePoll(pollId);
+  }
+}
+
 function initModalEvents() {
   dom.modalClose.addEventListener("click", closeModal);
 
@@ -791,7 +1036,14 @@ function initModalEvents() {
 
   dom.modalContent.addEventListener("click", (e) => {
     const voteBtn = e.target.closest(".vote-btn");
-    if (voteBtn) setUserVote(voteBtn.dataset.id, voteBtn.dataset.vote);
+    if (voteBtn) {
+      setUserVote(voteBtn.dataset.id, voteBtn.dataset.vote);
+      return;
+    }
+    const themeOpt = e.target.closest(".theme-opt");
+    if (themeOpt) {
+      setThemeVote(themeOpt.dataset.poll, themeOpt.dataset.option);
+    }
   });
 }
 

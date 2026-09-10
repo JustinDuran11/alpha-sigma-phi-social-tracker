@@ -585,6 +585,97 @@ ul { list-style: none; margin: 0; padding: 0; }
   white-space: nowrap;
 }
 
+/* Open-slot theme vote button — deliberately looks unset (dashed outline) */
+.cal-themevote {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 8px;
+  color: var(--cat-rush);
+  background: transparent;
+  border: 1px dashed var(--cat-rush);
+  text-align: left;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.cal-themevote:hover { background: rgba(47, 93, 80, 0.10); transform: translateY(-1px); }
+.cal-themevote.has-pick {
+  background: var(--cat-rush);
+  color: var(--white);
+  border-style: solid;
+}
+.cal-themevote .cal-themevote-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Theme poll options inside the modal */
+.theme-opts { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.theme-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--silver-line);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+.theme-opt:hover { transform: translateY(-1px); border-color: var(--cat-rush); }
+.theme-opt.is-picked {
+  border-color: var(--cat-rush);
+  background: rgba(47, 93, 80, 0.08);
+}
+.theme-opt-main { display: flex; flex-direction: column; gap: 2px; }
+.theme-opt-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--charcoal);
+}
+.theme-opt-lead {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  background: var(--cat-rush);
+  border-radius: 999px;
+  padding: 1px 7px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.theme-opt-blurb { font-size: 0.82rem; color: var(--charcoal-soft); }
+.theme-opt-count {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  line-height: 1;
+}
+.theme-opt-count small {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--silver);
+}
+.theme-opt.is-picked .theme-opt-count { color: var(--cat-rush); }
+
 .calendar-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1100,6 +1191,9 @@ ul { list-style: none; margin: 0; padding: 0; }
   .hero { padding: 90px 18px 70px; }
   .cal-cell { min-height: 66px; padding: 6px; }
   .cal-pill .pill-label { display: none; }
+  .cal-themevote { font-size: 0.6rem; padding: 2px 5px; }
+  .cal-themevote .cal-themevote-label { display: none; }
+  .cal-themevote.has-pick .cal-themevote-label { display: inline; }
   .calendar-weekdays span:nth-child(n) { font-size: 0.66rem; }
   .modal { padding: 24px 20px; }
   .modal-meta { grid-template-columns: 1fr; }
