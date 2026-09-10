@@ -37,8 +37,9 @@ const EVENTS = [
     partner: "Panhellenic (TBD)",
     attendance: "50-100",
     budget: "$$",
-    description: "Tailgate before the CSU football game — grill out, music, and yard games, with a possible joint fraternity/sorority turnout.",
+    description: "Tailgate this Saturday from 12–5 PM, then head over to the CSU football game together. Grill out, music, and yard games, with a possible joint fraternity/sorority turnout.",
     ideas: [
+      "Tailgate 12–5 PM, then walk over to the CSU football game",
       "Grill and cook out",
       "Live or DJ music",
       "Yard games (cornhole, spikeball)",
@@ -225,6 +226,98 @@ const EVENTS = [
       "Casual chapter hangout"
     ],
     sampleVotes: { mustDo: 12, interested: 19 }
+  },
+
+  /* ---- Fall 2026 Rush / Recruitment week ---- */
+  {
+    id: 12,
+    name: "Meet the Brothers",
+    date: "2026-09-09",
+    category: "rush",
+    status: "confirmed",
+    partner: "Open to potential new members",
+    attendance: "PNMs + brothers",
+    budget: "$",
+    description: "Rush kickoff — come by from 7–9 PM to meet the brothers, hang out, and hear about the chapter. Casual, no pressure.",
+    ideas: [
+      "7–9 PM",
+      "Casual hangout — food and drinks provided",
+      "Brothers on hand to answer questions",
+      "Bring a friend who might be interested"
+    ],
+    sampleVotes: { mustDo: 6, interested: 5 }
+  },
+  {
+    id: 13,
+    name: "ASig Cookout",
+    date: "2026-09-13",
+    category: "rush",
+    status: "confirmed",
+    partner: "Open to potential new members",
+    attendance: "PNMs + brothers",
+    budget: "$$",
+    description: "Rush cookout — burgers, dogs, and yard games with the chapter. Come eat and get to know everyone.",
+    ideas: [
+      "Grill out",
+      "Yard games (cornhole, spikeball)",
+      "Music",
+      "Great one to bring friends to"
+    ],
+    sampleVotes: { mustDo: 7, interested: 6 }
+  },
+  {
+    id: 14,
+    name: "Field Day",
+    date: "2026-09-16",
+    category: "rush",
+    status: "confirmed",
+    partner: "Open to potential new members",
+    attendance: "PNMs + brothers",
+    budget: "$",
+    description: "Rush field day at the CSU IM Fields from 5–8 PM — pickup games and team competitions with the brothers.",
+    ideas: [
+      "5–8 PM at the CSU IM Fields",
+      "Flag football, soccer, ultimate",
+      "Team competitions",
+      "Wear athletic clothes"
+    ],
+    sampleVotes: { mustDo: 6, interested: 7 }
+  },
+  {
+    id: 15,
+    name: "Steaks, Stogies & Poker",
+    date: "2026-09-20",
+    category: "rush",
+    status: "confirmed",
+    partner: "Open to potential new members",
+    attendance: "PNMs + brothers",
+    budget: "$$$",
+    description: "Rush event — grilled steaks, cigars, and a casual poker night with the chapter.",
+    ideas: [
+      "Steak dinner",
+      "Cigars",
+      "Low-stakes / for-fun poker tables",
+      "Dress a little nicer"
+    ],
+    sampleVotes: { mustDo: 8, interested: 5 }
+  },
+  {
+    id: 16,
+    name: "Invite-Only Dinner",
+    date: "2026-09-23",
+    category: "rush",
+    status: "planned",
+    partner: "Invited PNMs only",
+    attendance: "Invited PNMs + brothers",
+    budget: "$$$",
+    description: "Closing rush event — a sit-down dinner for invited potential new members. Details still being finalized.",
+    ideas: [
+      "Invite only",
+      "Sit-down dinner",
+      "Time and venue TBD",
+      "Bids / next steps discussed after"
+    ],
+    sampleVotes: { mustDo: 5, interested: 4 }
   }
 ];
 
@@ -240,7 +333,8 @@ const CATEGORIES = {
   date:         { label: "Date / Formal",    icon: "👔", color: "var(--cat-date)" },
   philanthropy: { label: "Philanthropy",     icon: "🏆", color: "var(--cat-philanthropy)" },
   theme:        { label: "Theme",            icon: "🎃", color: "var(--cat-theme)" },
-  sports:       { label: "Sports",           icon: "🏀", color: "var(--cat-sports)" }
+  sports:       { label: "Sports",           icon: "🏀", color: "var(--cat-sports)" },
+  rush:         { label: "Rush",             icon: "⭐", color: "var(--cat-rush)" }
 };
 
 const STATUSES = {
@@ -266,7 +360,8 @@ const FILTERS = [
   { key: "date",         label: "Dates / Formal" },
   { key: "philanthropy", label: "Philanthropy" },
   { key: "theme",        label: "Themes" },
-  { key: "sports",       label: "Sports" }
+  { key: "sports",       label: "Sports" },
+  { key: "rush",         label: "Rush" }
 ];
 
 /* Months shown in the semester calendar (JS months are 0-indexed). */
