@@ -1,4 +1,4 @@
-# Alpha Sig Social Hub — Fall 2026
+# Alpha Sig Events — Fall 2026
 
 A static planning page for the chapter: browse the semester calendar, filter and
 vote on event ideas, and submit new social suggestions.
