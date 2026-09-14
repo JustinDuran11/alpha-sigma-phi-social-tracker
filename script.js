@@ -45,7 +45,7 @@ const EVENTS = [
       "Yard games (cornhole, spikeball)",
       "Open it up as a joint tailgate"
     ],
-    sampleVotes: { mustDo: 34, interested: 22 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 2,
@@ -63,7 +63,7 @@ const EVENTS = [
       "Western-style decorations",
       "Possible joint social with a sorority"
     ],
-    sampleVotes: { mustDo: 18, interested: 27 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 3,
@@ -81,7 +81,7 @@ const EVENTS = [
       "Prizes for top chip counts",
       "Dressier social — encourage nicer attire"
     ],
-    sampleVotes: { mustDo: 21, interested: 19 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 4,
@@ -99,7 +99,7 @@ const EVENTS = [
       "Sports-themed decorations",
       "Tailgate-style games"
     ],
-    sampleVotes: { mustDo: 16, interested: 24 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 5,
@@ -117,7 +117,7 @@ const EVENTS = [
       "Glow sticks for guests",
       "DJ or curated playlist"
     ],
-    sampleVotes: { mustDo: 25, interested: 20 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 6,
@@ -135,7 +135,7 @@ const EVENTS = [
       "Photo backdrop",
       "Partner organization still being decided"
     ],
-    sampleVotes: { mustDo: 42, interested: 31 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 7,
@@ -153,7 +153,7 @@ const EVENTS = [
       "Photo setup",
       "Music for after dinner"
     ],
-    sampleVotes: { mustDo: 29, interested: 33 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 8,
@@ -171,7 +171,7 @@ const EVENTS = [
       "Joint chapter opportunity",
       "Music"
     ],
-    sampleVotes: { mustDo: 20, interested: 18 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 9,
@@ -189,7 +189,7 @@ const EVENTS = [
       "Thanksgiving decorations",
       "Casual, low-key vibe"
     ],
-    sampleVotes: { mustDo: 15, interested: 26 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 10,
@@ -207,7 +207,7 @@ const EVENTS = [
       "Photo backdrop",
       "Holiday music playlist"
     ],
-    sampleVotes: { mustDo: 23, interested: 20 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 11,
@@ -225,7 +225,7 @@ const EVENTS = [
       "Recognize new members & achievements",
       "Casual chapter hangout"
     ],
-    sampleVotes: { mustDo: 12, interested: 19 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
 
   /* ---- Fall 2026 Rush / Recruitment week ---- */
@@ -245,7 +245,7 @@ const EVENTS = [
       "Brothers on hand to answer questions",
       "Bring a friend who might be interested"
     ],
-    sampleVotes: { mustDo: 6, interested: 5 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 13,
@@ -263,7 +263,7 @@ const EVENTS = [
       "Music",
       "Great one to bring friends to"
     ],
-    sampleVotes: { mustDo: 7, interested: 6 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 14,
@@ -281,7 +281,7 @@ const EVENTS = [
       "Team competitions",
       "Wear athletic clothes"
     ],
-    sampleVotes: { mustDo: 6, interested: 7 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 15,
@@ -299,7 +299,7 @@ const EVENTS = [
       "Low-stakes / for-fun poker tables",
       "Dress a little nicer"
     ],
-    sampleVotes: { mustDo: 8, interested: 5 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 16,
@@ -317,14 +317,14 @@ const EVENTS = [
       "Time and venue TBD",
       "Bids / next steps discussed after"
     ],
-    sampleVotes: { mustDo: 5, interested: 4 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
 
   /* ---- Joint events with Phi Kappa Theta (ASig x Phi Kap) ---- */
   {
     id: 17,
     name: "Joint Tailgate — ASig x Phi Kap",
-    date: "2026-09-26",
+    date: "2026-09-19",
     category: "tailgate",
     status: "planned",
     partner: "Phi Kappa Theta",
@@ -337,7 +337,7 @@ const EVENTS = [
       "Shared yard games and music",
       "Lock the date with Phi Kap's social chair"
     ],
-    sampleVotes: { mustDo: 26, interested: 24 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 18,
@@ -355,7 +355,7 @@ const EVENTS = [
       "Split cost and guest list with Phi Kap",
       "Theme TBD — could tie into a calendar theme vote"
     ],
-    sampleVotes: { mustDo: 19, interested: 21 }
+    sampleVotes: { mustDo: 0, interested: 0 }
   }
 ];
 
@@ -372,7 +372,30 @@ const CATEGORIES = {
   philanthropy: { label: "Philanthropy",     icon: "🏆", color: "var(--cat-philanthropy)" },
   theme:        { label: "Theme",            icon: "🎃", color: "var(--cat-theme)" },
   sports:       { label: "Sports",           icon: "🏀", color: "var(--cat-sports)" },
-  rush:         { label: "Rush",             icon: "⭐", color: "var(--cat-rush)" }
+  rush:         { label: "Rush",             icon: "⭐", color: "var(--cat-rush)" },
+  other:        { label: "Other",            icon: "✨", color: "var(--cat-other)" }
+};
+
+/* Maps the Submit form's "Event Type" select values to CATEGORIES keys.
+   Most are 1:1; "formal" folds into the existing Date/Formal category. */
+const EVENT_TYPE_TO_CATEGORY = {
+  tailgate: "tailgate",
+  social: "social",
+  party: "party",
+  brotherhood: "brotherhood",
+  date: "date",
+  formal: "date",
+  philanthropy: "philanthropy",
+  sports: "sports",
+  other: "other"
+};
+
+const LOCATION_TYPE_LABELS = {
+  "chapter-house": "Chapter House",
+  "off-campus-venue": "Off-Campus Venue",
+  outdoor: "Outdoor / Park",
+  campus: "On Campus",
+  tbd: "TBD"
 };
 
 const STATUSES = {
@@ -399,7 +422,8 @@ const FILTERS = [
   { key: "philanthropy", label: "Philanthropy" },
   { key: "theme",        label: "Themes" },
   { key: "sports",       label: "Sports" },
-  { key: "rush",         label: "Rush" }
+  { key: "rush",         label: "Rush" },
+  { key: "other",        label: "Other" }
 ];
 
 /* Months shown in the semester calendar (JS months are 0-indexed). */
@@ -427,7 +451,6 @@ const SEMESTER_MONTHS = [
    -------------------------------------------------------------------- */
 const STORAGE_KEYS = {
   VOTES: "asf_votes",
-  SUBMISSIONS: "asf_submissions",
   THEME_VOTES: "asf_theme_votes"
 };
 
@@ -501,7 +524,7 @@ const THEME_POLLS = [
       { id: "jersey",      label: "Jersey Night",      blurb: "Rep your favorite team" },
       { id: "toga",        label: "Toga Night",        blurb: "Classic sheets-and-laurels" }
     ],
-    sampleVotes: { western: 14, highlighter: 11, jersey: 8, toga: 5 }
+    sampleVotes: { western: 0, highlighter: 0, jersey: 0, toga: 0 }
   },
   {
     id: "theme-2026-10-17",
@@ -514,7 +537,7 @@ const THEME_POLLS = [
       { id: "camo",         label: "Camo & Cowboys",      blurb: "Camo meets western" },
       { id: "decades",      label: "Decades (80s/90s)",   blurb: "Pick a decade and commit" }
     ],
-    sampleVotes: { blackout: 16, "adam-sandler": 13, camo: 9, decades: 7 }
+    sampleVotes: { blackout: 0, "adam-sandler": 0, camo: 0, decades: 0 }
   },
   {
     id: "theme-2026-12-05",
@@ -526,7 +549,7 @@ const THEME_POLLS = [
       { id: "santa",        label: "Santa's Workshop",   blurb: "Red & green, Santa hats" },
       { id: "winter",       label: "Winter Wonderland",  blurb: "Dress up, white & silver" }
     ],
-    sampleVotes: { "ugly-sweater": 18, santa: 10, winter: 12 }
+    sampleVotes: { "ugly-sweater": 0, santa: 0, winter: 0 }
   }
 ];
 
@@ -589,22 +612,62 @@ function themeLeaderId(poll) {
   return leader;
 }
 
-function loadSubmissions() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SUBMISSIONS);
-    return raw ? JSON.parse(raw) : [];
-  } catch (err) {
-    console.warn("Could not read submissions from localStorage:", err);
-    return [];
-  }
+/* --------------------------------------------------------------------
+   MEMBER-SUBMITTED EVENTS (Firestore — shared with the whole chapter)
+   --------------------------------------------------------------------
+   Unlike votes (which stay local to each browser), submitted events are
+   written to the "submissions" Firestore collection via firebase-config.js
+   and read back here in real time, so every visitor sees them — not just
+   the person who submitted. See README.md for the one-time Firebase setup
+   and the Firestore security rules to paste in.
+   -------------------------------------------------------------------- */
+let memberEvents = [];
+
+/* Converts a Firestore submission doc into the same shape as an EVENTS
+   entry so it can reuse the calendar/card/modal/voting rendering code. */
+function submissionToEvent(id, data) {
+  const ideas = [];
+  if (data.theme) ideas.push(`Theme: ${data.theme}`);
+  if (data.locationType) ideas.push(`Location: ${LOCATION_TYPE_LABELS[data.locationType] || data.locationType}`);
+  if (data.additionalIdeas) ideas.push(data.additionalIdeas);
+  if (!ideas.length) ideas.push("No extra details provided yet.");
+
+  return {
+    id,
+    name: data.eventName || "Untitled Idea",
+    date: data.suggestedDate || "",
+    category: EVENT_TYPE_TO_CATEGORY[data.eventType] || "other",
+    status: "idea",
+    partner: data.partner || "TBD",
+    attendance: data.attendance || "TBD",
+    budget: data.budget || "",
+    description: data.description || "Submitted by a chapter member.",
+    ideas,
+    sampleVotes: { mustDo: 0, interested: 0 },
+    isMemberSubmitted: true
+  };
 }
 
-function saveSubmissions(submissions) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.SUBMISSIONS, JSON.stringify(submissions));
-  } catch (err) {
-    console.warn("Could not save submission to localStorage:", err);
+function initMemberEvents() {
+  if (typeof db === "undefined") {
+    console.warn("Firestore not configured — see firebase-config.js. Member submissions are disabled.");
+    return;
   }
+  db.collection("submissions").orderBy("submittedAt", "desc").onSnapshot(
+    (snapshot) => {
+      memberEvents = snapshot.docs.map((doc) => submissionToEvent(doc.id, doc.data()));
+      renderCalendar(currentMonthIndex);
+      renderCards();
+      renderTopPicks();
+    },
+    (err) => console.warn("Could not load member-submitted events:", err)
+  );
+}
+
+/* Curated EVENTS plus live member submissions — every render function
+   below reads from this instead of EVENTS directly. */
+function getAllEvents() {
+  return [...EVENTS, ...memberEvents];
 }
 
 /* --------------------------------------------------------------------
@@ -631,6 +694,7 @@ function cacheDom() {
     picksList: document.getElementById("picksList"),
     ideaForm: document.getElementById("ideaForm"),
     formSuccess: document.getElementById("formSuccess"),
+    formError: document.getElementById("formError"),
     modalOverlay: document.getElementById("modalOverlay"),
     modalContent: document.getElementById("modalContent"),
     modalClose: document.getElementById("modalClose")
@@ -654,6 +718,7 @@ function parseISODate(dateStr) {
 }
 
 function formatDateLong(dateStr) {
+  if (!dateStr) return "Date TBD";
   return parseISODate(dateStr).toLocaleDateString("en-US", {
     month: "long", day: "numeric", year: "numeric"
   });
@@ -708,7 +773,7 @@ function buildCalendarCells(year, month0) {
 
 function eventsOnDate(year, month0, day) {
   const iso = toISODate(year, month0, day);
-  return EVENTS.filter((ev) => ev.date === iso);
+  return getAllEvents().filter((ev) => ev.date === iso);
 }
 
 function renderCalendar(monthIndex) {
@@ -802,7 +867,7 @@ function renderFilters() {
 }
 
 function getFilteredEvents() {
-  const sorted = [...EVENTS].sort((a, b) => a.date.localeCompare(b.date));
+  const sorted = [...getAllEvents()].sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"));
   return activeFilter === "all" ? sorted : sorted.filter((ev) => ev.category === activeFilter);
 }
 
@@ -820,9 +885,11 @@ function cardTemplate(ev) {
 
       <h3 class="card-title">${escapeHtml(ev.name)}</h3>
 
+      ${ev.isMemberSubmitted ? `<span class="card-member-badge">🙋 Submitted by a member</span>` : ""}
+
       <div class="card-meta">
         <span>📅 ${formatDateLong(ev.date)}</span>
-        <span>🤝 Partner: ${escapeHtml(ev.partner)}</span>
+        <span>🤝 Partner: ${escapeHtml(ev.partner || "TBD")}</span>
       </div>
 
       <p class="card-desc">${escapeHtml(ev.description)}</p>
@@ -874,7 +941,7 @@ function initCardEvents() {
    TOP CHAPTER PICKS
    -------------------------------------------------------------------- */
 function renderTopPicks() {
-  const ranked = [...EVENTS].sort((a, b) => chapterScore(b) - chapterScore(a));
+  const ranked = [...getAllEvents()].sort((a, b) => chapterScore(b) - chapterScore(a));
   const maxScore = chapterScore(ranked[0]) || 1;
 
   const voteTagLabels = {
@@ -910,7 +977,7 @@ function renderTopPicks() {
    EVENT DETAIL MODAL
    -------------------------------------------------------------------- */
 function openModal(eventId) {
-  const ev = EVENTS.find((e) => String(e.id) === String(eventId));
+  const ev = getAllEvents().find((e) => String(e.id) === String(eventId));
   if (!ev) return;
 
   const cat = CATEGORIES[ev.category];
@@ -925,11 +992,13 @@ function openModal(eventId) {
       <span class="status-badge status-${ev.status}">${status.label}</span>
     </div>
 
+    ${ev.isMemberSubmitted ? `<span class="card-member-badge">🙋 Submitted by a member</span>` : ""}
+
     <div class="modal-meta">
       <div><strong>Date</strong>${formatDateLong(ev.date)}</div>
-      <div><strong>Partner</strong>${escapeHtml(ev.partner)}</div>
-      <div><strong>Est. Attendance</strong>${escapeHtml(ev.attendance)}</div>
-      <div><strong>Est. Budget</strong>${escapeHtml(ev.budget)}</div>
+      <div><strong>Partner</strong>${escapeHtml(ev.partner || "TBD")}</div>
+      <div><strong>Est. Attendance</strong>${escapeHtml(ev.attendance || "TBD")}</div>
+      <div><strong>Est. Budget</strong>${escapeHtml(ev.budget || "Not sure yet")}</div>
     </div>
 
     <p class="modal-desc">${escapeHtml(ev.description)}</p>
@@ -1004,9 +1073,9 @@ function openThemePoll(pollId) {
     </div>
 
     <p class="picks-note" style="margin-top:14px;">
-      Tap an option to cast your vote (tap again to undo). Vote counts are
-      illustrative starting numbers plus your own pick — stored only in this
-      browser, not a live chapter total.
+      Tap an option to cast your vote (tap again to undo). No one has voted yet —
+      counts start at zero, plus your own pick — stored only in this browser, not
+      a live chapter total.
     </p>
   `;
 
@@ -1059,8 +1128,6 @@ function handleFormSubmit(e) {
   const field = (id) => document.getElementById(id);
 
   const data = {
-    id: Date.now(),
-    submittedAt: new Date().toISOString(),
     eventName: field("eventName").value.trim(),
     eventType: field("eventType").value,
     suggestedDate: field("suggestedDate").value,
@@ -1078,58 +1145,45 @@ function handleFormSubmit(e) {
     return;
   }
 
-  /* ----------------------------------------------------------------
-     FUTURE INTEGRATION — GOOGLE FORMS / GOOGLE SHEETS
-     Right now, submissions are only saved to this browser's
-     localStorage (see saveSubmissions() above). To send them
-     somewhere the whole chapter can see, uncomment ONE of the two
-     options below (and remove the localStorage lines if you no
-     longer want a local copy too).
-
-     OPTION A — Google Forms
-     (replace YOUR_FORM_ID and each entry.NNNNNNNNN with the real
-     field IDs from "Get pre-filled link" on your Google Form):
-
-       fetch("https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse", {
-         method: "POST",
-         mode: "no-cors",
-         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-         body: new URLSearchParams({
-           "entry.111111111": data.eventName,
-           "entry.222222222": data.eventType,
-           "entry.333333333": data.suggestedDate,
-           "entry.444444444": data.partner,
-           "entry.555555555": data.theme,
-           "entry.666666666": data.attendance,
-           "entry.777777777": data.budget,
-           "entry.888888888": data.locationType,
-           "entry.999999999": data.description,
-           "entry.101010101": data.additionalIdeas
-         })
-       });
-
-     OPTION B — Google Sheets via an Apps Script Web App
-     (deploy a script bound to your Sheet as a Web App, then POST here):
-
-       fetch("https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec", {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(data)
-       });
-  ---------------------------------------------------------------- */
-
-  const submissions = loadSubmissions();
-  submissions.push(data);
-  saveSubmissions(submissions);
-
-  form.reset();
-  dom.formSuccess.hidden = false;
-  dom.formSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-  window.clearTimeout(handleFormSubmit._hideTimer);
-  handleFormSubmit._hideTimer = window.setTimeout(() => {
+  if (typeof db === "undefined") {
     dom.formSuccess.hidden = true;
-  }, 7000);
+    dom.formError.hidden = false;
+    console.warn("Firestore not configured — see firebase-config.js.");
+    return;
+  }
+
+  data.submittedAt = firebase.firestore.FieldValue.serverTimestamp();
+
+  const submitBtn = form.querySelector(".btn-submit");
+  submitBtn.disabled = true;
+  dom.formError.hidden = true;
+
+  // Firestore treats a bad/unreachable project as a transient error and
+  // retries quietly rather than rejecting right away, which would otherwise
+  // leave the button stuck on "disabled" forever with no feedback. This
+  // timeout guarantees the form always resolves one way or the other.
+  const timeout = new Promise((_, reject) =>
+    window.setTimeout(() => reject(new Error("Timed out saving to Firestore")), 10000)
+  );
+
+  Promise.race([db.collection("submissions").add(data), timeout])
+    .then(() => {
+      form.reset();
+      dom.formSuccess.hidden = false;
+      dom.formSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      window.clearTimeout(handleFormSubmit._hideTimer);
+      handleFormSubmit._hideTimer = window.setTimeout(() => {
+        dom.formSuccess.hidden = true;
+      }, 7000);
+    })
+    .catch((err) => {
+      console.warn("Could not save submission to Firestore:", err);
+      dom.formError.hidden = false;
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+    });
 }
 
 function initFormEvents() {
@@ -1155,6 +1209,7 @@ function init() {
   initCardEvents();
   initModalEvents();
   initFormEvents();
+  initMemberEvents();
 }
 
 document.addEventListener("DOMContentLoaded", init);

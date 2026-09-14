@@ -12,6 +12,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="styles.css" />
+
+<!-- Firebase (shared, real-time storage for member-submitted events) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -132,9 +137,9 @@
       <ol class="picks-list" id="picksList"></ol>
 
       <p class="picks-note">
-        The vote counts above are illustrative starting numbers, set for launch and stored in the code —
-        not a live shared total. Your own vote lives only in this browser (see below) and is always shown
-        separately from these chapter numbers.
+        No one has voted yet — these counts start at zero and rank the list as votes come in.
+        Your own vote lives only in this browser (see below) and is always shown separately from
+        the chapter-wide numbers above.
       </p>
     </div>
   </section>
@@ -229,22 +234,20 @@
         </div>
 
         <!--
-          FUTURE INTEGRATION NOTE:
-          To connect this form to Google Forms, replace the handleFormSubmit() logic
-          in script.js with a fetch() POST to your published Google Form's
-          "formResponse" URL, mapping each field name below to the Form's entry.XXXXXXX
-          IDs. To use Google Sheets directly, deploy a Google Apps Script as a Web App
-          and POST the same JSON body to that Web App URL instead. See the matching
-          comment block above handleFormSubmit() in script.js for a ready-to-uncomment
-          example.
+          Submissions save to Firestore (see firebase-config.js) and appear live
+          as event cards for every visitor, not just the person who submitted.
+          See handleFormSubmit() in script.js.
         -->
 
         <button type="submit" class="btn btn-primary btn-submit">Submit Social Idea</button>
       </form>
 
       <div class="form-success" id="formSuccess" hidden>
-        ✅ Thanks — your idea has been saved on this device. Bring it up at the next chapter meeting,
-        or a brother running the site can review submissions in the browser's local storage.
+        ✅ Thanks — your idea is live on the site now under Event Ideas for the whole chapter to see and vote on.
+      </div>
+
+      <div class="form-error" id="formError" hidden>
+        ⚠️ Something went wrong saving your idea — check your connection and try again.
       </div>
     </div>
   </section>
