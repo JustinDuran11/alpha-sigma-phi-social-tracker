@@ -12,12 +12,12 @@
    ========================================================================== */
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDPT2UEOXCoG6-VPXUd325tuEPD4lhiMFc",
+  authDomain: "alphasigma-phi.firebaseapp.com",
+  projectId: "alphasigma-phi",
+  storageBucket: "alphasigma-phi.firebasestorage.app",
+  messagingSenderId: "513474908946",
+  appId: "1:513474908946:web:a5189cd8e2cfdd4483d9cb"
 };
 
 firebase.initializeApp(firebaseConfig);
