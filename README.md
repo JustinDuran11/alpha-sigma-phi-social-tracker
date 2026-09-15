@@ -13,12 +13,15 @@ hosted version on GitHub Pages.
   the same running totals in real time.
 - Event ideas submitted through the "Submit a Social Idea" form are shared
   the same way. They show up live as event cards for every visitor, marked
-  "Submitted by a member."
-- There's no login system, so "your" vote is tracked by a random id stored
-  in your browser (`localStorage`) rather than an account. Clearing your
-  browser data resets which vote is "yours," same trust level as the rest
-  of this site — fine for a chapter tool, not meant to resist deliberate
-  abuse.
+  "Submitted by a member," with a Status dropdown and a Delete button —
+  anyone can promote a submitted idea onto the real calendar (by changing
+  its status to Planned/Confirmed) or remove it.
+- There's no login system, so none of the above (voting, submitting,
+  promoting, deleting) is restricted to chapter members — anyone with the
+  site's public URL can do all of it. "Your" vote is tracked by a random id
+  stored in your browser (`localStorage`) rather than an account. This is a
+  deliberate trade-off for simplicity, not an oversight — fine for a
+  low-stakes chapter tool, not meant to resist deliberate abuse.
 - Drop `crest.jpeg`, `letters.jpeg`, and `seal.jpeg` into `assets/` to replace
   the ΑΣΦ placeholders (see `assets/README-add-your-images-here.txt`).
 
@@ -45,9 +48,7 @@ One-time setup, ~5 minutes:
    service cloud.firestore {
      match /databases/{database}/documents {
        match /submissions/{id} {
-         allow read: if true;
-         allow create: if true;
-         allow update, delete: if false;
+         allow read, write: if true;
        }
        match /votes/{id} {
          allow read, write: if true;
@@ -59,13 +60,14 @@ One-time setup, ~5 minutes:
    }
    ```
 
-   `submissions` is append-only — anyone can read and submit an idea, but
-   nobody can edit or delete one once it's posted (including their own),
-   which keeps the list vandalism-proof without requiring logins.
-   `votes` and `themeVotes` allow write too, since casting or undoing your
-   own vote needs to update/delete a document — there's no login system to
-   restrict that to "your own" vote at the database level (see the Notes
-   above), which is an acceptable trade-off for a low-stakes chapter tool.
+   All three collections are fully open: anyone can read, and anyone can
+   create/update/delete. There's no login system on this site to restrict
+   any of that to "your own" vote/submission or to chapter officers only
+   (see the Notes above) — an intentional trade-off for a low-stakes
+   chapter tool, not a security oversight. If you'd rather lock down who
+   can delete submissions or promote them onto the calendar, that requires
+   adding real accounts (e.g. Firebase Authentication) — ask if you want
+   that built later.
    Click **Publish**.
 6. Reload the site — voting and the submit form are now live for the whole
    chapter.

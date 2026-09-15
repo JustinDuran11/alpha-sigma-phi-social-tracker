@@ -655,7 +655,7 @@ function submissionToEvent(id, data) {
     name: data.eventName || "Untitled Idea",
     date: data.suggestedDate || "",
     category: EVENT_TYPE_TO_CATEGORY[data.eventType] || "other",
-    status: "idea",
+    status: data.status && STATUSES[data.status] ? data.status : "idea",
     partner: data.partner || "TBD",
     attendance: data.attendance || "TBD",
     budget: data.budget || "",
@@ -663,6 +663,29 @@ function submissionToEvent(id, data) {
     ideas,
     isMemberSubmitted: true
   };
+}
+
+/* --------------------------------------------------------------------
+   MANAGE SUBMISSIONS (promote to the calendar, or delete)
+   --------------------------------------------------------------------
+   No login system on this site, so these are open to any visitor —
+   not restricted to chapter officers. See README.md.
+   -------------------------------------------------------------------- */
+function updateSubmissionStatus(id, status) {
+  if (typeof db === "undefined") return;
+  db.collection("submissions").doc(String(id)).update({ status })
+    .catch((err) => console.warn("Could not update submission status:", err));
+}
+
+function deleteSubmission(id) {
+  if (typeof db === "undefined") return;
+  if (!confirm("Delete this submitted idea? This can't be undone.")) return;
+  db.collection("submissions").doc(String(id)).delete()
+    .then(() => {
+      const row = dom.modalContent.querySelector(".modal-vote-row");
+      if (!dom.modalOverlay.hidden && row && row.dataset.eventId === String(id)) closeModal();
+    })
+    .catch((err) => console.warn("Could not delete submission:", err));
 }
 
 function initMemberEvents() {
@@ -916,12 +939,33 @@ function cardTemplate(ev) {
         ${ev.ideas.slice(0, 3).map((i) => `<li>${escapeHtml(i)}</li>`).join("")}
       </ul>
 
+      ${ev.isMemberSubmitted ? manageRowTemplate(ev) : ""}
+
       <div class="card-footer">
         <button class="vote-btn ${userVote === "interested" ? "is-active" : ""}" data-id="${ev.id}" data-vote="interested">👍 Interested</button>
         <button class="vote-btn ${userVote === "mustDo" ? "is-active" : ""}" data-id="${ev.id}" data-vote="mustDo">🔥 Must Do</button>
         <button class="card-details-btn" data-id="${ev.id}">View Details</button>
       </div>
     </article>
+  `;
+}
+
+/* Anyone can promote a submitted idea onto the real calendar (by changing
+   its status) or delete it — there's no login system on this site, so
+   this is open to any visitor, not just chapter officers. */
+function manageRowTemplate(ev) {
+  return `
+    <div class="manage-row">
+      <label class="manage-status">
+        Status
+        <select data-manage-status="${ev.id}">
+          ${Object.entries(STATUSES).map(([key, s]) => `
+            <option value="${key}" ${ev.status === key ? "selected" : ""}>${s.label}</option>
+          `).join("")}
+        </select>
+      </label>
+      <button class="manage-delete-btn" data-manage-delete="${ev.id}">🗑 Delete</button>
+    </div>
   `;
 }
 
@@ -948,9 +992,21 @@ function initCardEvents() {
       setUserVote(voteBtn.dataset.id, voteBtn.dataset.vote);
       return;
     }
+    const deleteBtn = e.target.closest("[data-manage-delete]");
+    if (deleteBtn) {
+      deleteSubmission(deleteBtn.dataset.manageDelete);
+      return;
+    }
     const detailsBtn = e.target.closest(".card-details-btn");
     if (detailsBtn) {
       openModal(detailsBtn.dataset.id);
+    }
+  });
+
+  dom.cardsGrid.addEventListener("change", (e) => {
+    const statusSelect = e.target.closest("[data-manage-status]");
+    if (statusSelect) {
+      updateSubmissionStatus(statusSelect.dataset.manageStatus, statusSelect.value);
     }
   });
 }
@@ -1025,6 +1081,8 @@ function openModal(eventId) {
     <ul class="modal-ideas">
       ${ev.ideas.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}
     </ul>
+
+    ${ev.isMemberSubmitted ? manageRowTemplate(ev) : ""}
 
     <div class="modal-vote-row" data-event-id="${ev.id}">
       <button class="vote-btn ${userVote === "interested" ? "is-active" : ""}" data-id="${ev.id}" data-vote="interested">👍 Interested</button>
@@ -1146,6 +1204,18 @@ function initModalEvents() {
     const themeOpt = e.target.closest(".theme-opt");
     if (themeOpt) {
       setThemeVote(themeOpt.dataset.poll, themeOpt.dataset.option);
+      return;
+    }
+    const deleteBtn = e.target.closest("[data-manage-delete]");
+    if (deleteBtn) {
+      deleteSubmission(deleteBtn.dataset.manageDelete);
+    }
+  });
+
+  dom.modalContent.addEventListener("change", (e) => {
+    const statusSelect = e.target.closest("[data-manage-status]");
+    if (statusSelect) {
+      updateSubmissionStatus(statusSelect.dataset.manageStatus, statusSelect.value);
     }
   });
 }
