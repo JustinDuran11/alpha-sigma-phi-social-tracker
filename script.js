@@ -20,11 +20,10 @@
      budget      free text, e.g. "$$"
      description short sentence for the card + modal
      ideas       array of short bullet strings
-     sampleVotes { mustDo: <number>, interested: <number> }
-                 Starting/placeholder chapter-wide vote counts used to seed
-                 the "Top Chapter Picks" ranking before real votes exist.
-                 These are NOT connected to localStorage — see the VOTING
-                 section further down for how real votes are handled.
+
+   Vote counts (Must Do / Interested) are NOT stored here — they live in
+   Firestore and are shared live across the whole chapter. See the VOTING
+   section further down.
    ========================================================================== */
 
 const EVENTS = [
@@ -45,7 +44,6 @@ const EVENTS = [
       "Yard games (cornhole, spikeball)",
       "Open it up as a joint tailgate"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 2,
@@ -63,7 +61,6 @@ const EVENTS = [
       "Western-style decorations",
       "Possible joint social with a sorority"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 3,
@@ -81,7 +78,6 @@ const EVENTS = [
       "Prizes for top chip counts",
       "Dressier social — encourage nicer attire"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 4,
@@ -99,7 +95,6 @@ const EVENTS = [
       "Sports-themed decorations",
       "Tailgate-style games"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 5,
@@ -117,7 +112,6 @@ const EVENTS = [
       "Glow sticks for guests",
       "DJ or curated playlist"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 6,
@@ -135,7 +129,6 @@ const EVENTS = [
       "Photo backdrop",
       "Partner organization still being decided"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 7,
@@ -153,7 +146,6 @@ const EVENTS = [
       "Photo setup",
       "Music for after dinner"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 8,
@@ -171,7 +163,6 @@ const EVENTS = [
       "Joint chapter opportunity",
       "Music"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 9,
@@ -189,7 +180,6 @@ const EVENTS = [
       "Thanksgiving decorations",
       "Casual, low-key vibe"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 10,
@@ -207,7 +197,6 @@ const EVENTS = [
       "Photo backdrop",
       "Holiday music playlist"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 11,
@@ -225,7 +214,6 @@ const EVENTS = [
       "Recognize new members & achievements",
       "Casual chapter hangout"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
 
   /* ---- Fall 2026 Rush / Recruitment week ---- */
@@ -245,7 +233,6 @@ const EVENTS = [
       "Brothers on hand to answer questions",
       "Bring a friend who might be interested"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 13,
@@ -263,7 +250,6 @@ const EVENTS = [
       "Music",
       "Great one to bring friends to"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 14,
@@ -281,7 +267,6 @@ const EVENTS = [
       "Team competitions",
       "Wear athletic clothes"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 15,
@@ -299,7 +284,6 @@ const EVENTS = [
       "Low-stakes / for-fun poker tables",
       "Dress a little nicer"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 16,
@@ -317,7 +301,6 @@ const EVENTS = [
       "Time and venue TBD",
       "Bids / next steps discussed after"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
 
   /* ---- Joint events with Phi Kappa Theta (ASig x Phi Kap) ---- */
@@ -337,7 +320,6 @@ const EVENTS = [
       "Shared yard games and music",
       "Lock the date with Phi Kap's social chair"
     ],
-    sampleVotes: { mustDo: 0, interested: 0 }
   },
   {
     id: 18,
@@ -354,8 +336,7 @@ const EVENTS = [
       "Bigger off-campus venue",
       "Split cost and guest list with Phi Kap",
       "Theme TBD — could tie into a calendar theme vote"
-    ],
-    sampleVotes: { mustDo: 0, interested: 0 }
+    ]
   }
 ];
 
@@ -435,61 +416,93 @@ const SEMESTER_MONTHS = [
 ];
 
 /* --------------------------------------------------------------------
-   VOTING (localStorage)
+   VOTING (Firestore — shared live with the whole chapter)
    --------------------------------------------------------------------
-   IMPORTANT: Votes stored here live ONLY in the current browser, on the
-   current device. They are NOT shared with other chapter members and
-   are wiped if the user clears their browser data. The numbers shown
-   in "Top Chapter Picks" (sampleVotes above) are separate, hardcoded
-   placeholder totals — a user's own vote never changes that number.
-
-   To make voting shared across the whole chapter, swap the
-   loadVotes/saveVotes functions below for calls to Google Sheets,
-   Firebase, or Supabase. Every other function in this file calls only
-   loadVotes()/saveVotes()/getUserVote()/setUserVote(), so that's the
-   only place you'd need to change.
+   Every vote (event Interested/Must Do/Not Interested, and theme-poll
+   picks) is one document in Firestore, keyed by "<eventId or pollId>__
+   <voterId>" so re-voting overwrites your own prior vote instead of
+   adding a duplicate. voterId is a random id generated once per browser
+   (see getVoterId) — there's no login system, so it's the only way to
+   tell "your" vote apart from everyone else's; someone could clear their
+   browser data and vote again, same trust level as the rest of this
+   site. Every visitor holds one live listener on each collection and
+   recomputes counts client-side — plenty cheap at chapter scale.
    -------------------------------------------------------------------- */
 const STORAGE_KEYS = {
-  VOTES: "asf_votes",
-  THEME_VOTES: "asf_theme_votes"
+  VOTER_ID: "asf_voter_id"
 };
 
-function loadVotes() {
+function getVoterId() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.VOTES);
-    return raw ? JSON.parse(raw) : {};
+    let id = localStorage.getItem(STORAGE_KEYS.VOTER_ID);
+    if (!id) {
+      id = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+      localStorage.setItem(STORAGE_KEYS.VOTER_ID, id);
+    }
+    return id;
   } catch (err) {
-    console.warn("Could not read votes from localStorage:", err);
-    return {};
+    console.warn("Could not access localStorage for voter id:", err);
+    return `anon-${Math.random().toString(36).slice(2)}`;
   }
 }
 
-function saveVotes(votes) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.VOTES, JSON.stringify(votes));
-  } catch (err) {
-    console.warn("Could not save votes to localStorage:", err);
-  }
+let voteCounts = {};   // eventId (string) -> { mustDo, interested, notInterested }
+let myVotes = {};      // eventId (string) -> vote type
+
+function getVoteCounts(ev) {
+  return voteCounts[String(ev.id)] || { mustDo: 0, interested: 0, notInterested: 0 };
 }
 
 function getUserVote(eventId) {
-  const votes = loadVotes();
-  return votes[String(eventId)] || null;
+  return myVotes[String(eventId)] || null;
 }
 
-/* Clicking the same vote again removes it (un-vote). */
+/* Clicking the same vote again removes it (un-vote). Updates local state
+   immediately so the UI feels instant; the live listener reconciles
+   moments later once Firestore confirms the write. */
 function setUserVote(eventId, type) {
-  const votes = loadVotes();
+  if (typeof db === "undefined") return;
   const key = String(eventId);
-  if (votes[key] === type) {
-    delete votes[key];
+  const voterId = getVoterId();
+  const ref = db.collection("votes").doc(`${key}__${voterId}`);
+
+  if (myVotes[key] === type) {
+    delete myVotes[key];
+    ref.delete().catch((err) => console.warn("Could not remove vote:", err));
   } else {
-    votes[key] = type;
+    myVotes[key] = type;
+    ref.set({ eventId: key, voterId, type }).catch((err) => console.warn("Could not save vote:", err));
   }
-  saveVotes(votes);
   renderCards();
   renderTopPicks();
   refreshOpenModal(eventId);
+}
+
+function initVotes() {
+  if (typeof db === "undefined") {
+    console.warn("Firestore not configured — see firebase-config.js. Voting is disabled.");
+    return;
+  }
+  const voterId = getVoterId();
+  db.collection("votes").onSnapshot(
+    (snapshot) => {
+      const counts = {};
+      const mine = {};
+      snapshot.forEach((doc) => {
+        const { eventId, voterId: vId, type } = doc.data();
+        if (!eventId || !type) return;
+        counts[eventId] = counts[eventId] || { mustDo: 0, interested: 0, notInterested: 0 };
+        counts[eventId][type] = (counts[eventId][type] || 0) + 1;
+        if (vId === voterId) mine[eventId] = type;
+      });
+      voteCounts = counts;
+      myVotes = mine;
+      renderCards();
+      renderTopPicks();
+      refreshOpenModalVotes();
+    },
+    (err) => console.warn("Could not load votes:", err)
+  );
 }
 
 /* --------------------------------------------------------------------
@@ -501,16 +514,14 @@ function setUserVote(eventId, type) {
    solid event pill, so nothing looks locked in before people weigh in.
 
    Fields per poll:
-     id           unique string
-     date         "YYYY-MM-DD" (same Sept–Dec 2026 calendar window)
-     label        short title shown at the top of the vote box
-     note         optional one-liner under the title
-     options      array of { id, label, blurb }
-     sampleVotes  { <optionId>: <number> } starting/placeholder counts,
-                  same idea as sampleVotes on EVENTS — not a live total.
-   Like event votes, a member's pick is stored only in their own
-   browser (STORAGE_KEYS.THEME_VOTES) and shown separately from these
-   placeholder numbers.
+     id      unique string
+     date    "YYYY-MM-DD" (same Sept–Dec 2026 calendar window)
+     label   short title shown at the top of the vote box
+     note    optional one-liner under the title
+     options array of { id, label, blurb }
+
+   Vote counts per option are live from Firestore (see the VOTING
+   section above) — not stored on the poll itself.
    -------------------------------------------------------------------- */
 const THEME_POLLS = [
   {
@@ -523,8 +534,7 @@ const THEME_POLLS = [
       { id: "highlighter", label: "Highlighter Party", blurb: "White tees + markers, blacklights" },
       { id: "jersey",      label: "Jersey Night",      blurb: "Rep your favorite team" },
       { id: "toga",        label: "Toga Night",        blurb: "Classic sheets-and-laurels" }
-    ],
-    sampleVotes: { western: 0, highlighter: 0, jersey: 0, toga: 0 }
+    ]
   },
   {
     id: "theme-2026-10-17",
@@ -536,8 +546,7 @@ const THEME_POLLS = [
       { id: "adam-sandler", label: "Adam Sandler Night",  blurb: "Cargo shorts, baggy jerseys, hoops" },
       { id: "camo",         label: "Camo & Cowboys",      blurb: "Camo meets western" },
       { id: "decades",      label: "Decades (80s/90s)",   blurb: "Pick a decade and commit" }
-    ],
-    sampleVotes: { blackout: 0, "adam-sandler": 0, camo: 0, decades: 0 }
+    ]
   },
   {
     id: "theme-2026-12-05",
@@ -548,8 +557,7 @@ const THEME_POLLS = [
       { id: "ugly-sweater", label: "Ugly Sweater",       blurb: "Tackiest sweater wins a prize" },
       { id: "santa",        label: "Santa's Workshop",   blurb: "Red & green, Santa hats" },
       { id: "winter",       label: "Winter Wonderland",  blurb: "Dress up, white & silver" }
-    ],
-    sampleVotes: { "ugly-sweater": 0, santa: 0, winter: 0 }
+    ]
   }
 ];
 
@@ -561,45 +569,55 @@ function themePollForDate(isoDate) {
   return THEME_POLLS.find((p) => p.date === isoDate) || null;
 }
 
-function loadThemeVotes() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.THEME_VOTES);
-    return raw ? JSON.parse(raw) : {};
-  } catch (err) {
-    console.warn("Could not read theme votes from localStorage:", err);
-    return {};
-  }
-}
-
-function saveThemeVotes(votes) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.THEME_VOTES, JSON.stringify(votes));
-  } catch (err) {
-    console.warn("Could not save theme vote to localStorage:", err);
-  }
-}
+let themeVoteCounts = {}; // pollId -> { optionId: count }
+let myThemeVotes = {};    // pollId -> optionId
 
 function getThemeVote(pollId) {
-  return loadThemeVotes()[pollId] || null;
+  return myThemeVotes[pollId] || null;
 }
 
 /* Clicking your current pick again clears it (un-vote). */
 function setThemeVote(pollId, optionId) {
-  const votes = loadThemeVotes();
-  if (votes[pollId] === optionId) {
-    delete votes[pollId];
+  if (typeof db === "undefined") return;
+  const voterId = getVoterId();
+  const ref = db.collection("themeVotes").doc(`${pollId}__${voterId}`);
+
+  if (myThemeVotes[pollId] === optionId) {
+    delete myThemeVotes[pollId];
+    ref.delete().catch((err) => console.warn("Could not remove theme vote:", err));
   } else {
-    votes[pollId] = optionId;
+    myThemeVotes[pollId] = optionId;
+    ref.set({ pollId, voterId, optionId }).catch((err) => console.warn("Could not save theme vote:", err));
   }
-  saveThemeVotes(votes);
   renderCalendar(currentMonthIndex);
   refreshOpenThemePoll(pollId);
 }
 
-/* Total shown per option = placeholder sampleVotes + your own pick. */
+function initThemeVotes() {
+  if (typeof db === "undefined") return;
+  const voterId = getVoterId();
+  db.collection("themeVotes").onSnapshot(
+    (snapshot) => {
+      const counts = {};
+      const mine = {};
+      snapshot.forEach((doc) => {
+        const { pollId, voterId: vId, optionId } = doc.data();
+        if (!pollId || !optionId) return;
+        counts[pollId] = counts[pollId] || {};
+        counts[pollId][optionId] = (counts[pollId][optionId] || 0) + 1;
+        if (vId === voterId) mine[pollId] = optionId;
+      });
+      themeVoteCounts = counts;
+      myThemeVotes = mine;
+      renderCalendar(currentMonthIndex);
+      refreshOpenThemePollAny();
+    },
+    (err) => console.warn("Could not load theme votes:", err)
+  );
+}
+
 function themeOptionCount(poll, optionId) {
-  const base = poll.sampleVotes[optionId] || 0;
-  return base + (getThemeVote(poll.id) === optionId ? 1 : 0);
+  return (themeVoteCounts[poll.id] && themeVoteCounts[poll.id][optionId]) || 0;
 }
 
 function themeLeaderId(poll) {
@@ -643,7 +661,6 @@ function submissionToEvent(id, data) {
     budget: data.budget || "",
     description: data.description || "Submitted by a chapter member.",
     ideas,
-    sampleVotes: { mustDo: 0, interested: 0 },
     isMemberSubmitted: true
   };
 }
@@ -729,7 +746,8 @@ function toISODate(year, month0, day) {
 }
 
 function chapterScore(ev) {
-  return ev.sampleVotes.mustDo * 2 + ev.sampleVotes.interested;
+  const counts = getVoteCounts(ev);
+  return counts.mustDo * 2 + counts.interested;
 }
 
 /* --------------------------------------------------------------------
@@ -953,6 +971,7 @@ function renderTopPicks() {
   dom.picksList.innerHTML = ranked.map((ev, i) => {
     const pct = Math.round((chapterScore(ev) / maxScore) * 100);
     const userVote = getUserVote(ev.id);
+    const counts = getVoteCounts(ev);
 
     return `
       <li class="pick-item">
@@ -961,8 +980,8 @@ function renderTopPicks() {
           <div class="pick-top-row">
             <span class="pick-name">${CATEGORIES[ev.category].icon} ${escapeHtml(ev.name)}</span>
             <span class="pick-votes">
-              <span>🔥 ${ev.sampleVotes.mustDo} Must Do</span>
-              <span>👍 ${ev.sampleVotes.interested} Interested</span>
+              <span>🔥 ${counts.mustDo} Must Do</span>
+              <span>👍 ${counts.interested} Interested</span>
             </span>
           </div>
           <div class="pick-bar-track"><div class="pick-bar-fill" style="width:${pct}%"></div></div>
@@ -1033,6 +1052,14 @@ function refreshOpenModal(eventId) {
   }
 }
 
+/* Same as refreshOpenModal, but for the votes listener, which doesn't know
+   which specific event just changed — could be anyone's vote on any event. */
+function refreshOpenModalVotes() {
+  if (dom.modalOverlay.hidden) return;
+  const row = dom.modalContent.querySelector(".modal-vote-row");
+  if (row) openModal(row.dataset.eventId);
+}
+
 /* --------------------------------------------------------------------
    THEME POLL MODAL
    -------------------------------------------------------------------- */
@@ -1073,9 +1100,8 @@ function openThemePoll(pollId) {
     </div>
 
     <p class="picks-note" style="margin-top:14px;">
-      Tap an option to cast your vote (tap again to undo). No one has voted yet —
-      counts start at zero, plus your own pick — stored only in this browser, not
-      a live chapter total.
+      Tap an option to cast your vote (tap again to undo). Counts are live and
+      shared across the whole chapter.
     </p>
   `;
 
@@ -1090,6 +1116,14 @@ function refreshOpenThemePoll(pollId) {
   if (box && box.dataset.pollId === pollId) {
     openThemePoll(pollId);
   }
+}
+
+/* Same as refreshOpenThemePoll, but for the theme-votes listener, which
+   doesn't know which specific poll just changed. */
+function refreshOpenThemePollAny() {
+  if (dom.modalOverlay.hidden) return;
+  const box = dom.modalContent.querySelector(".theme-opts");
+  if (box) openThemePoll(box.dataset.pollId);
 }
 
 function initModalEvents() {
@@ -1210,6 +1244,8 @@ function init() {
   initModalEvents();
   initFormEvents();
   initMemberEvents();
+  initVotes();
+  initThemeVotes();
 }
 
 document.addEventListener("DOMContentLoaded", init);
